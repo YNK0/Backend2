@@ -100,7 +100,7 @@ app.put('/api/notes/:id', (req, res) => {
     res.json(updatedNote);
 });
 
-const port = 3001;
+const port = proccess.env.PORT || 3001;
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
