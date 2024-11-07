@@ -1,11 +1,11 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const requestLogger = (req, res, next) => {
+const requestLogger = (req, _res, next) => {
     console.log('Method:', req.method);
     console.log('Path:', req.path);
     console.log('Body:', req.body);
@@ -33,11 +33,11 @@ let notes = [
     }
 ];
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
     res.send('<h1>API REST FROM NOTES</h1>');
 });
 
-app.get('/api/notes', (req, res) => {
+app.get('/api/notes', (_req, res) => {
     res.json(notes);
 });
 
@@ -100,7 +100,7 @@ app.put('/api/notes/:id', (req, res) => {
     res.json(updatedNote);
 });
 
-const port = proccess.env.PORT || 3001;
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
