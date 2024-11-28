@@ -45,13 +45,6 @@ app.delete('/api/notes/:id', (req, res) => {
     res.status(204).end();
 });
 
-const generateId = () => {
-    const maxId = notes.length > 0
-        ? Math.max(...notes.map(n => n.id))
-        : 0;
-    return maxId + 1;
-};
-
 app.post('/api/notes', (req, res) => {
     const body = req.body;
     if (!body.content) {
@@ -61,29 +54,35 @@ app.post('/api/notes', (req, res) => {
     }
 
     const note = {
-        id: generateId(),
         content: body.content,
         important: Boolean(body.important) || false
     };
 
-    notes = [...notes, note];
-    res.json(note);
+    Note.addNote(note)
+    .then(newNote => {
+        res.json(newNote);
+    }).catch(error => {
+        console.error(error);
+        res.status(500).end();
+    });
+
 });
 
-app.put('/api/notes/:id', (req, res) => {
-    const id = Number(req.params.id);
-    const body = req.body;
-    const note = notes.find(note => note.id === id);
+app.put('/api/notes/:id', async (req, res) => {
+    const id = (req.params.id);
+    const note = await Note.getNote(id);
+
     if (!note) {
         return res.status(404).end();
     }
 
-    const updatedNote = {
-        ...note,
+    const body = req.body;
+    const newNote = {
+        content: body.content,
         important: body.important
     };
 
-    notes = notes.map(note => note.id !== id ? note : updatedNote);
+    const updatedNote = await Note.updateNote(id, newNote);
     res.json(updatedNote);
 });
 

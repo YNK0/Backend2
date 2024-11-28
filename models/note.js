@@ -30,6 +30,26 @@ const getAll = async () => {
     return await Note.find({});
 };
 
+const updateNote = async (id, newNote) => {
+    return await Note.findByIdAndUpdate (id, newNote, {new: true});
+}
+
+const getNote = async (id) => {
+    return await Note.findById(id );
+}
+
+const addNote = async (note) => {
+    const newNote = new Note({
+        content: note.content,
+        important: note.important || false
+    });
+
+    return await newNote.save();
+}
+
 module.exports = {
-    getAll
+    getAll,
+    updateNote,
+    getNote,
+    addNote
 };
